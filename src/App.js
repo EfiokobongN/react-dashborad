@@ -3,21 +3,21 @@ import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { FiSettings} from 'react-icons/fi';
 import { TooltipComponent } from '@syncfusion/ej2-react-popups';
-import { Navbar, Sidebar } from './components';
+import { Navbar, Sidebar, ThemeSettings } from './components';
 import { Area, Bar, Calendar, ColorMapping, ColorPicker, Customers, Ecommerce, Editor, Employees, Financial, Kanban, Line, Orders, Pie, Pyramid, Stacked } from './pages';
 import { useStateContext } from './contexts/ContextProvider';
 
 
 
 const App = () => {
-  const { activeMenu } = useStateContext();
+  const { activeMenu, themeSettings, setThemeSettings, currentColor, currentMode } = useStateContext();
   return (
-    <div>
+    <div className={currentMode === 'Dark' ? 'dark' : ''}>
       <BrowserRouter>
       <div className='flex relative dark:bg-main-dark-bg'>
         <div className='fixed right-4 bottom-4' style={{ zIndex: '1000' }}>
           <TooltipComponent content="Settings" position='Top'>
-            <button type='button' className='text-3xl p-3 hover:drop-shadow-xl hover:bg-light-gray text-white' style={{ background: 'red', borderRadius: '50%'}}><FiSettings /></button>
+            <button type='button' className='text-3xl p-3 hover:drop-shadow-xl hover:bg-light-gray text-white' onClick={() => setThemeSettings(true)} style={{ background: currentColor, borderRadius: '50%'}}><FiSettings /></button>
           </TooltipComponent>
         </div>
         {activeMenu ? (
@@ -39,13 +39,13 @@ const App = () => {
               <Navbar />
             </div>
 
-          </div>
-
           <div>
+          {themeSettings && <ThemeSettings />}
+
             <Routes>
               {/* DASHBORADS */}
-              <Route path='/' element="Ecommerce" />
-              <Route path='/ecommerce' element={<Ecommerce />}/>
+              <Route path='/' element={<Ecommerce />} />
+              <Route path="/ecommerce" element={<Ecommerce />}/>
 
               {/* pages */}
               <Route path='/orders' element={<Orders />}/>
@@ -68,6 +68,7 @@ const App = () => {
                <Route path='/pyramid' element={<Pyramid />}/>
                <Route path='/stacked' element={<Stacked />}/>
             </Routes>
+          </div>
           </div>
       </div>
       </BrowserRouter>
